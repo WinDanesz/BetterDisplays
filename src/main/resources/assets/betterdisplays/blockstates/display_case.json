@@ -1,0 +1,12 @@
+{
+    "forge_marker": 1,
+    "variants": {
+        "normal": {
+            "model": "betterdisplays:display_case"
+        },
+        "inventory": {
+            "model": "betterdisplays:display_case",
+            "transform": "forge:default-block"
+        }
+    }
+}

@@ -1,0 +1,10 @@
+[{
+    "modid": "betterdisplays",
+    "name": "Better Displays",
+    "description": "Better Displays is a Minecraft mod adding decoration blocks to the game.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://www.curseforge.com/minecraft/mc-mods/better-displays",
+    "authorList": ["WinDanesz"],
+    "logoFile":"assets/betterdisplays/textures/gui/logo.png"
+}]
