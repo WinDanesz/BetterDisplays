@@ -2,6 +2,7 @@ package com.windanesz.betterdisplays.tileentity;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -17,8 +18,9 @@ public class TileEntityDisplayCase extends TileEntity {
 	private int rotationX;
 	private int rotationZ;
 
-	private IBlockState mainBlock;
-	private IBlockState glassBlock;
+	private IBlockState mainBlock = Blocks.PLANKS.getDefaultState();
+	private IBlockState glassBlock = Blocks.GLASS.getDefaultState();
+	private IBlockState carpetBlock;
 
 
 	public TileEntityDisplayCase() {
@@ -57,6 +59,13 @@ public class TileEntityDisplayCase extends TileEntity {
 		markDirty();
 	}
 
+	public void setCarpetBlock(ItemStack itemStack) {
+		Block block = Block.getBlockFromItem(itemStack.getItem());
+		carpetBlock = block.getStateFromMeta(itemStack.getMetadata());
+		world.notifyNeighborsRespectDebug(pos, this.blockType, true);
+		markDirty();
+	}
+
 	public IBlockState getMainBlock() {
 		return mainBlock;
 	}
@@ -64,6 +73,8 @@ public class TileEntityDisplayCase extends TileEntity {
 	public IBlockState getGlassBlock() {
 		return glassBlock;
 	}
+
+	public IBlockState getCarpetBlock() {		return carpetBlock;	}
 
 	public void rotateItem(EnumFacing side) {
 		switch (side) {
@@ -97,6 +108,11 @@ public class TileEntityDisplayCase extends TileEntity {
 			nbt.setInteger("glass_block_meta", glassBlock.getBlock().getMetaFromState(glassBlock));
 		}
 
+		if (carpetBlock != null) {
+			nbt.setString("carpet_block", carpetBlock.getBlock().getRegistryName().toString());
+			nbt.setInteger("carpet_block_meta", carpetBlock.getBlock().getMetaFromState(carpetBlock));
+		}
+
 		return nbt;
 	}
 
@@ -116,6 +132,11 @@ public class TileEntityDisplayCase extends TileEntity {
 		String glass_block = nbt.getString("glass_block");
 		if (!glass_block.isEmpty()) {
 			glassBlock = Block.getBlockFromName(glass_block).getStateFromMeta(nbt.getInteger("glass_block_meta"));
+		}
+
+		String carpet_block = nbt.getString("carpet_block");
+		if (!glass_block.isEmpty()) {
+			carpetBlock = Block.getBlockFromName(carpet_block).getStateFromMeta(nbt.getInteger("carpet_block_meta"));
 		}
 
 	}

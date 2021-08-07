@@ -23,6 +23,11 @@ public final class BDModels {
 
 		// Itemblocks
 		registerItemModel(Item.getItemFromBlock(BDBlocks.display_case));
+		registerItemModel(Item.getItemFromBlock(BDBlocks.display_case_framed));
+		registerItemModel(Item.getItemFromBlock(BDBlocks.display_case_framed_no_top));
+		registerItemModel(Item.getItemFromBlock(BDBlocks.display_case_small));
+		registerItemModel(Item.getItemFromBlock(BDBlocks.display_case_small_framed));
+		registerItemModel(Item.getItemFromBlock(BDBlocks.book_holder));
 
 	}
 

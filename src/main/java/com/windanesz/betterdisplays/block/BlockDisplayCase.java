@@ -29,12 +29,15 @@ import javax.annotation.Nullable;
 
 public class BlockDisplayCase extends Block implements ITileEntityProvider {
 
-	public BlockDisplayCase() {
+	String tile;
+
+	public BlockDisplayCase(String tile) {
 		super(Material.WOOD);
 		setCreativeTab(BDTab.BETTER_DISPLAYS_TAB);
 		setSoundType(SoundType.GLASS);
 		setHardness(2.0F);
 		setResistance(5.0F);
+		this.tile = tile;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -49,7 +52,7 @@ public class BlockDisplayCase extends Block implements ITileEntityProvider {
 	@Nullable
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return new TileEntityDisplayCase();
+		return TileFactory.getTile(tile);
 	}
 
 	@Override
@@ -100,6 +103,10 @@ public class BlockDisplayCase extends Block implements ITileEntityProvider {
 						.equals(toInsert.getItem().getRegistryName().toString())).findFirst().orElse(ItemStack.EMPTY)) {
 			tileCase.setMainBlock(toInsert);
 			return true;
+		} else if (item1 == Item.getItemFromBlock(Blocks.CARPET)) {
+			tileCase.setCarpetBlock(toInsert);
+			return true;
+
 		} else {
 			if (ItemStack.EMPTY != OreDictionary.getOres("blockGlass").stream().filter(stack -> stack.getItem().getRegistryName().toString()
 					.equals(toInsert.getItem().getRegistryName().toString())).findFirst().orElse(ItemStack.EMPTY)) {
@@ -137,8 +144,28 @@ public class BlockDisplayCase extends Block implements ITileEntityProvider {
 		if (tileEntity instanceof TileEntityDisplayCase) {
 			ItemStack stack = ((TileEntityDisplayCase) tileEntity).getStack();
 
+			TileEntityDisplayCase displayCase = (TileEntityDisplayCase) tileEntity;
+
 			if (!stack.isEmpty()) {
 				InventoryHelper.spawnItemStack(worldIn, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), stack);
+			}
+
+			if (displayCase.getMainBlock() != null) {
+				IBlockState blockState = displayCase.getMainBlock();
+				ItemStack itemStack = new ItemStack(Item.getItemFromBlock(blockState.getBlock()), 1, blockState.getBlock().getMetaFromState(blockState));
+				InventoryHelper.spawnItemStack(worldIn, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), itemStack);
+			}
+
+			if (displayCase.getGlassBlock() != null) {
+				IBlockState blockState = displayCase.getGlassBlock();
+				ItemStack itemStack = new ItemStack(Item.getItemFromBlock(blockState.getBlock()), 1, blockState.getBlock().getMetaFromState(blockState));
+				InventoryHelper.spawnItemStack(worldIn, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), itemStack);
+			}
+
+			if (displayCase.getCarpetBlock() != null) {
+				IBlockState blockState = displayCase.getCarpetBlock();
+				ItemStack itemStack = new ItemStack(Item.getItemFromBlock(blockState.getBlock()), 1, blockState.getBlock().getMetaFromState(blockState));
+				InventoryHelper.spawnItemStack(worldIn, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), itemStack);
 			}
 		}
 

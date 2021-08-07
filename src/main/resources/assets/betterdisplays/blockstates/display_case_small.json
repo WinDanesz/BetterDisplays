@@ -5,7 +5,7 @@
             "model": "betterdisplays:display_case"
         },
         "inventory": {
-            "model": "betterdisplays:item_display_case",
+            "model": "betterdisplays:item_display_case_small",
             "transform": "forge:default-block"
         }
     }

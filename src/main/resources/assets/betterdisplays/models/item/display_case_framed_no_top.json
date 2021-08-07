@@ -1,0 +1,4 @@
+{
+    "transform": "forge:default-block",
+    "parent": "betterdisplays:item/item_display_case"
+}

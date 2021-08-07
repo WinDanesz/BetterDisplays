@@ -20,6 +20,10 @@ public class RenderDisplayCase extends TileEntitySpecialRenderer<TileEntityDispl
 
 	private static final float SCALE = 0.0625F;
 
+	public ModelDisplayCase getModel() {
+		return model;
+	}
+
 	private final ModelDisplayCase model = new ModelDisplayCase();
 
 	private ResourceLocation cachedMainTexture = new ResourceLocation("minecraft:textures/blocks/planks_oak.png");
@@ -45,7 +49,7 @@ public class RenderDisplayCase extends TileEntitySpecialRenderer<TileEntityDispl
 		GlStateManager.rotate(180, 0F, 0F, 1.0F);
 
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(0f, -0.02f, 0f);
+		GlStateManager.translate(0f, getItemYOffset(), 0f);
 
 		if (rotX != 0) {
 			GlStateManager.rotate((float) rotX * 360.0F / 8.0F, 1.0F, 0.0F, 0.0F);
@@ -76,12 +80,27 @@ public class RenderDisplayCase extends TileEntitySpecialRenderer<TileEntityDispl
 				String path = namespace + ":textures/" + stringTokenizerMainMaterial.nextToken() + ".png";
 				ResourceLocation MainTexture = new ResourceLocation(path);
 				this.bindTexture(MainTexture);
-				this.model.renderCase(SCALE);
+				this.getModel().renderCase(SCALE);
 				GlStateManager.popMatrix();
 				GlStateManager.pushMatrix();
 			}
 //		}
 
+		IBlockState cachedCarpetBlockState = tileentity.getCarpetBlock();
+		String carpetString = dispatcher.getModelForState(cachedCarpetBlockState).getQuads(cachedCarpetBlockState, EnumFacing.NORTH, 0).get(0).getSprite().getIconName();
+		StringTokenizer stringTokenizerCarpet = new StringTokenizer(carpetString, ":");
+		if (stringTokenizerCarpet.countTokens() == 2) {
+			String namespace = stringTokenizerCarpet.nextToken();
+			String path = namespace + ":textures/" + stringTokenizerCarpet.nextToken() + ".png";
+			ResourceLocation carpetTexture = new ResourceLocation(path);
+			this.bindTexture(carpetTexture);
+			GlStateManager.enableDepth();
+			GlStateManager.depthFunc(515);
+			GlStateManager.depthMask(true);
+			GlStateManager.enableBlend(); // enable glass transparency
+			this.getModel().renderCarpet(SCALE);
+			GlStateManager.disableBlend(); // disable transparency
+		}
 //		if (cachedGlassBlockState != tileentity.getGlassBlock()) {
 			IBlockState cachedGlassBlockState = tileentity.getGlassBlock();
 
@@ -96,9 +115,10 @@ public class RenderDisplayCase extends TileEntitySpecialRenderer<TileEntityDispl
 				GlStateManager.depthFunc(515);
 				GlStateManager.depthMask(true);
 			GlStateManager.enableBlend(); // enable glass transparency
-			this.model.renderGlass(SCALE);
+			this.getModel().renderGlass(SCALE);
 			GlStateManager.disableBlend(); // disable transparency
 			}
+
 //		}
 
 
@@ -124,6 +144,10 @@ public class RenderDisplayCase extends TileEntitySpecialRenderer<TileEntityDispl
 
 			GlStateManager.popMatrix();
 		}
+	}
+
+	public float getItemYOffset() {
+		return -0.02f;
 	}
 
 }

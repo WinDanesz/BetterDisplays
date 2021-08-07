@@ -1,16 +1,15 @@
 package com.windanesz.betterdisplays.client.model;
 
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelDisplayCase extends ModelBase {
+public class ModelDisplayCaseFramed extends ModelDisplayCase {
 	private final ModelRenderer dcase;
 	private final ModelRenderer glass;
 	private final ModelRenderer carpet;
 
-	public ModelDisplayCase() {
+	public ModelDisplayCaseFramed() {
 		textureWidth = 16;
 		textureHeight = 16;
 
@@ -19,6 +18,10 @@ public class ModelDisplayCase extends ModelBase {
 		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -16.0F, -1.0F, 0.0F, 16, 1, 16, 0.0F, false));
 		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -11.0F, -5.0F, 5.0F, 6, 4, 6, 0.0F, false));
 		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -16.0F, -16.0F, 0.0F, 16, 1, 16, 0.0F, false));
+		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -16.0F, -15.0F, 0.0F, 1, 14, 1, 0.0F, false));
+		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -1.0F, -15.0F, 0.0F, 1, 14, 1, 0.0F, false));
+		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -1.0F, -15.0F, 15.0F, 1, 14, 1, 0.0F, true));
+		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -16.0F, -15.0F, 15.0F, 1, 14, 1, 0.0F, false));
 
 		glass = new ModelRenderer(this);
 		glass.setRotationPoint(-8.0F, 1.0F, 8.0F);

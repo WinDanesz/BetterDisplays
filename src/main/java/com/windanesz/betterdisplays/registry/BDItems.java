@@ -55,6 +55,11 @@ public final class BDItems {
 		IForgeRegistry<Item> registry = event.getRegistry();
 
 		registerItemBlock(registry, BDBlocks.display_case);
+		registerItemBlock(registry, BDBlocks.display_case_framed);
+		registerItemBlock(registry, BDBlocks.display_case_framed_no_top);
+		registerItemBlock(registry, BDBlocks.display_case_small);
+		registerItemBlock(registry, BDBlocks.display_case_small_framed);
+		registerItemBlock(registry, BDBlocks.book_holder);
 		// registerItem(registry, "ring_poison_arrow", new ItemASArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
 
 	}

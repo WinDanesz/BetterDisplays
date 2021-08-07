@@ -1,42 +1,42 @@
 package com.windanesz.betterdisplays.client.model;
 
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelBox;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelDisplayCase extends ModelBase {
+public class ModelDisplayCaseSmallFramed extends ModelDisplayCase {
 	private final ModelRenderer dcase;
 	private final ModelRenderer glass;
 	private final ModelRenderer carpet;
 
-	public ModelDisplayCase() {
+	public ModelDisplayCaseSmallFramed() {
 		textureWidth = 16;
 		textureHeight = 16;
 
 		dcase = new ModelRenderer(this);
 		dcase.setRotationPoint(0.0F, 24.0F, 0.0F);
 		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -16.0F, -1.0F, 0.0F, 16, 1, 16, 0.0F, false));
-		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -11.0F, -5.0F, 5.0F, 6, 4, 6, 0.0F, false));
-		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -16.0F, -16.0F, 0.0F, 16, 1, 16, 0.0F, false));
+		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -16.0F, -7.0F, 0.0F, 1, 6, 1, 0.0F, false));
+		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -1.0F, -7.0F, 0.0F, 1, 6, 1, 0.0F, false));
+		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -1.0F, -7.0F, 15.0F, 1, 6, 1, 0.0F, true));
+		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -16.0F, -7.0F, 15.0F, 1, 6, 1, 0.0F, false));
+		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -15.0F, -8.0F, 0.0F, 14, 1, 1, 0.0F, false));
+		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -15.0F, -8.0F, 15.0F, 14, 1, 1, 0.0F, false));
+		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -16.0F, -8.0F, 0.0F, 1, 1, 16, 0.0F, false));
+		dcase.cubeList.add(new ModelBox(dcase, 0, 0, -1.0F, -8.0F, 0.0F, 1, 1, 16, 0.0F, false));
 
 		glass = new ModelRenderer(this);
 		glass.setRotationPoint(-8.0F, 1.0F, 8.0F);
-		glass.cubeList.add(new ModelBox(glass, 0, 0, -8.0F, 8.0F, 7.99F, 16, 14, 0, 0.0F, false));
-		glass.cubeList.add(new ModelBox(glass, 0, 0, -8.0F, 8.0F, -7.99F, 16, 14, 0, 0.0F, false));
-		glass.cubeList.add(new ModelBox(glass, 0, 0, -7.99F, 8.0F, -8.0F, 0, 14, 16, 0.0F, false));
-		glass.cubeList.add(new ModelBox(glass, 0, 0, 7.99F, 8.0F, -8.0F, 0, 14, 16, 0.0F, false));
+		glass.cubeList.add(new ModelBox(glass, 0, 0, -8.0F, 16.0F, 7.99F, 16, 6, 0, 0.0F, false));
+		glass.cubeList.add(new ModelBox(glass, 0, 0, -8.0F, 16.0F, -7.99F, 16, 6, 0, 0.0F, false));
+		glass.cubeList.add(new ModelBox(glass, 0, 0, -7.99F, 16.0F, -8.0F, 0, 6, 16, 0.0F, false));
+		glass.cubeList.add(new ModelBox(glass, 0, 0, 7.99F, 16.0F, -8.0F, 0, 6, 16, 0.0F, false));
+		glass.cubeList.add(new ModelBox(glass, 0, 0, -8.0F, 15.01F, -8.0F, 16, 0, 16, 0.0F, false));
 
 		carpet = new ModelRenderer(this);
 		carpet.setRotationPoint(0.0F, 24.0F, 0.0F);
 		carpet.cubeList.add(new ModelBox(carpet, 0, 0, -16.0F, -1.01F, 0.0F, 16, 0, 16, 0.0F, false));
-		carpet.cubeList.add(new ModelBox(carpet, 0, 0, -11.0F, -5.01F, 5.0F, 6, 0, 6, 0.0F, false));
-		carpet.cubeList.add(new ModelBox(carpet, 0, 0, -11.0F, -5.0F, 4.99F, 6, 4, 0, 0.0F, false));
-		carpet.cubeList.add(new ModelBox(carpet, 0, 0, -11.0F, -5.0F, 11.01F, 6, 4, 0, 0.0F, false));
-		carpet.cubeList.add(new ModelBox(carpet, 0, 0, -5.99F, -5.0F, 5.0F, 1, 4, 6, 0.0F, false));
-		carpet.cubeList.add(new ModelBox(carpet, 0, 0, -11.01F, -5.0F, 5.0F, 1, 4, 6, 0.0F, false));
 	}
-
 	@Override
 	public void render(Entity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
 		//dcase.render(scale);

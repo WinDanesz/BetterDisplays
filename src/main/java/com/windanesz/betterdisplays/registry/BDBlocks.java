@@ -1,8 +1,16 @@
 package com.windanesz.betterdisplays.registry;
 
 import com.windanesz.betterdisplays.BetterDisplays;
+import com.windanesz.betterdisplays.block.BlockBookHolder;
 import com.windanesz.betterdisplays.block.BlockDisplayCase;
+import com.windanesz.betterdisplays.block.BlockDisplayCaseSmall;
+import com.windanesz.betterdisplays.block.BlockDisplayCaseSmallFramed;
+import com.windanesz.betterdisplays.tileentity.TileEntityBookHolder;
 import com.windanesz.betterdisplays.tileentity.TileEntityDisplayCase;
+import com.windanesz.betterdisplays.tileentity.TileEntityDisplayCaseFramed;
+import com.windanesz.betterdisplays.tileentity.TileEntityDisplayCaseFramedNoTop;
+import com.windanesz.betterdisplays.tileentity.TileEntityDisplayCaseSmall;
+import com.windanesz.betterdisplays.tileentity.TileEntityDisplayCaseSmallFramed;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
@@ -24,6 +32,27 @@ public class BDBlocks {
 	private static <T> T placeholder() { return null; }
 
 	public static final Block display_case = placeholder();
+	public static final Block display_case_framed = placeholder();
+	public static final Block display_case_framed_no_top = placeholder();
+	public static final Block display_case_small = placeholder();
+	public static final Block display_case_small_framed = placeholder();
+
+	public static final Block book_holder = placeholder();
+
+	@SubscribeEvent
+	public static void register(RegistryEvent.Register<Block> event) {
+
+		IForgeRegistry<Block> registry = event.getRegistry();
+
+		registerBlock(registry, "display_case", new BlockDisplayCase("display_case"));
+		registerBlock(registry, "display_case_framed", new BlockDisplayCase("display_case_framed"));
+		registerBlock(registry, "display_case_framed_no_top", new BlockDisplayCase("display_case_framed_no_top"));
+		registerBlock(registry, "display_case_small", new BlockDisplayCaseSmall("display_case_small"));
+		registerBlock(registry, "display_case_small_framed", new BlockDisplayCaseSmallFramed( "display_case_small_framed"));
+
+		registerBlock(registry, "book_holder", new BlockBookHolder());
+
+	}
 
 	public static void registerBlock(IForgeRegistry<Block> registry, String name, Block block) {
 		block.setRegistryName(BetterDisplays.MODID, name);
@@ -31,30 +60,17 @@ public class BDBlocks {
 		registry.register(block);
 	}
 
-	@SubscribeEvent
-	public static void register(RegistryEvent.Register<Block> event) {
-
-		IForgeRegistry<Block> registry = event.getRegistry();
-
-		registerBlock(registry, "display_case", new BlockDisplayCase());
-
-	}
 
 	/**
 	 * Called from the preInit method in the main mod class to register all the tile entities.
 	 */
 	public static void registerTileEntities() {
-		//		GameRegistry.registerTileEntity(TileSphereCognizance.class, new ResourceLocation(AncientSpellcraft.MODID, "sphere_cognizance"));
-		//		GameRegistry.registerTileEntity(TileSentinel.class, new ResourceLocation(AncientSpellcraft.MODID, "sentinel_block"));
-		//
 		GameRegistry.registerTileEntity(TileEntityDisplayCase.class, new ResourceLocation(BetterDisplays.MODID, "display_case"));
-		//		GameRegistry.registerTileEntity(TileCandleLight.class, new ResourceLocation(AncientSpellcraft.MODID, "candlelight"));
-		//		GameRegistry.registerTileEntity(TileSkullWatch.class, new ResourceLocation(AncientSpellcraft.MODID, "skull_watch"));
-		//		GameRegistry.registerTileEntity(TileScribingDesk.class, new ResourceLocation(AncientSpellcraft.MODID, "scribing_desk"));
-		//		GameRegistry.registerTileEntity(TileRune.class, new ResourceLocation(AncientSpellcraft.MODID, "placed_rune"));
-		//		GameRegistry.registerTileEntity(TileEntityMagicMushroom.class, new ResourceLocation(AncientSpellcraft.MODID, "magic_mushroom_tile"));
-		//
-		//		GameRegistry.registerTileEntity(TileEntityRevertingBlock.class, new ResourceLocation(AncientSpellcraft.MODID, "reverting_tile"));
+		GameRegistry.registerTileEntity(TileEntityDisplayCaseFramed.class, new ResourceLocation(BetterDisplays.MODID, "display_case_framed"));
+		GameRegistry.registerTileEntity(TileEntityDisplayCaseFramedNoTop.class, new ResourceLocation(BetterDisplays.MODID, "display_case_framed_no_top"));
+		GameRegistry.registerTileEntity(TileEntityDisplayCaseSmall.class, new ResourceLocation(BetterDisplays.MODID, "display_case_small"));
+		GameRegistry.registerTileEntity(TileEntityDisplayCaseSmallFramed.class, new ResourceLocation(BetterDisplays.MODID, "display_case_small_framed"));
+		GameRegistry.registerTileEntity(TileEntityBookHolder.class, new ResourceLocation(BetterDisplays.MODID, "book_holder"));
 	}
 
 }
