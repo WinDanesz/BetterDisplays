@@ -1,0 +1,9 @@
+{
+	"parent": "betterdisplays:block/book_holder_empty",
+	"textures": {
+		"0": "betterdisplays:blocks/belt_2",
+		"1": "betterdisplays:blocks/frame_birch",
+		"2": "betterdisplays:blocks/standard_book",
+		"particle": "betterdisplays:blocks/frame_birch"
+	}
+}

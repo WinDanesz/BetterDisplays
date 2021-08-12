@@ -1,0 +1,17 @@
+{
+    "forge_marker": 1,
+    "variants": {
+        "facing=south,has_book=false": {"model": "betterdisplays:book_holder_oak_empty", "uvlock": false},
+        "facing=west,has_book=false": {"model": "betterdisplays:book_holder_oak_empty", "uvlock": false, "y": 90},
+        "facing=north,has_book=false": {"model": "betterdisplays:book_holder_oak_empty", "uvlock": false, "y": 180},
+        "facing=east,has_book=false": {"model": "betterdisplays:book_holder_oak_empty", "uvlock": false, "y": 270},
+        "facing=south,has_book=true": {"model": "betterdisplays:book_holder_oak", "uvlock": false},
+        "facing=west,has_book=true": {"model": "betterdisplays:book_holder_oak", "uvlock": false, "y": 90},
+        "facing=north,has_book=true": {"model": "betterdisplays:book_holder_oak", "uvlock": false, "y": 180},
+        "facing=east,has_book=true": {"model": "betterdisplays:book_holder_oak", "uvlock": false, "y": 270},
+        "inventory": {
+            "model": "betterdisplays:book_holder_oak_empty",
+            "transform": "forge:default-block"
+        }
+    }
+}

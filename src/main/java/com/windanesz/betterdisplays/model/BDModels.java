@@ -27,7 +27,13 @@ public final class BDModels {
 		registerItemModel(Item.getItemFromBlock(BDBlocks.display_case_framed_no_top));
 		registerItemModel(Item.getItemFromBlock(BDBlocks.display_case_small));
 		registerItemModel(Item.getItemFromBlock(BDBlocks.display_case_small_framed));
-		registerItemModel(Item.getItemFromBlock(BDBlocks.book_holder));
+
+		registerItemModel(Item.getItemFromBlock(BDBlocks.book_holder_oak));
+		registerItemModel(Item.getItemFromBlock(BDBlocks.book_holder_spruce));
+		registerItemModel(Item.getItemFromBlock(BDBlocks.book_holder_birch));
+		registerItemModel(Item.getItemFromBlock(BDBlocks.book_holder_acacia));
+		registerItemModel(Item.getItemFromBlock(BDBlocks.book_holder_jungle));
+		registerItemModel(Item.getItemFromBlock(BDBlocks.book_holder_dark_oak));
 
 	}
 

@@ -135,7 +135,7 @@ public class TileEntityDisplayCase extends TileEntity {
 		}
 
 		String carpet_block = nbt.getString("carpet_block");
-		if (!glass_block.isEmpty()) {
+		if (!carpet_block.isEmpty()) {
 			carpetBlock = Block.getBlockFromName(carpet_block).getStateFromMeta(nbt.getInteger("carpet_block_meta"));
 		}
 

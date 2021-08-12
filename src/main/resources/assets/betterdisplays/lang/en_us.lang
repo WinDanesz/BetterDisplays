@@ -10,3 +10,15 @@ tile.betterdisplays\:display_case_small.name=Small Display Case
 tile.betterdisplays\:display_case_small_framed.name=Small Framed Display Case
 tile.betterdisplays\:book_holder.name=Book Holder
 tile.betterdisplays\:book_holder_empty.name=Empty Book Holder
+tile.betterdisplays\:book_holder_oak.name=Oak Book Holder
+tile.betterdisplays\:book_holder_spruce.name=Spruce Book Holder
+tile.betterdisplays\:book_holder_jungle.name=Jungle Book Holder
+tile.betterdisplays\:book_holder_dark_oak.name=Dark Oak Book Holder
+tile.betterdisplays\:book_holder_acacia.name=Acacia Book Holder
+tile.betterdisplays\:book_holder_birch.name=Birch Book Holder
+
+# settings
+config.betterdisplays\:title.general=General Settings
+config.betterdisplays\:title.settings=General settings of the Better Displays mod
+config.betterdisplays\:subtitle.general=General settings of the Better Displays mod
+config.betterdisplays\:subtitle.settings=General settings of the Better Displays mod

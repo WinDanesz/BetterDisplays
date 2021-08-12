@@ -1,6 +1,8 @@
 
 package com.windanesz.betterdisplays.client.renderer;
 
+import com.windanesz.betterdisplays.BetterDisplays;
+import com.windanesz.betterdisplays.client.ClientEventHandler;
 import com.windanesz.betterdisplays.client.model.ModelDisplayCase;
 import com.windanesz.betterdisplays.tileentity.TileEntityDisplayCase;
 import net.minecraft.block.state.IBlockState;
@@ -9,11 +11,15 @@ import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
+import java.util.Map;
 import java.util.StringTokenizer;
 
 public class RenderDisplayCase extends TileEntitySpecialRenderer<TileEntityDisplayCase> {
@@ -36,6 +42,8 @@ public class RenderDisplayCase extends TileEntitySpecialRenderer<TileEntityDispl
 
 	@Override
 	public void render(TileEntityDisplayCase tileentity, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+		boolean hasItem = !tileentity.getStack().isEmpty();
+
 		GlStateManager.pushMatrix();
 
 		GlStateManager.translate((float) x + 0.5f, (float) y + 0.5f, (float) z + 0.5f);
@@ -70,21 +78,21 @@ public class RenderDisplayCase extends TileEntitySpecialRenderer<TileEntityDispl
 
 		GlStateManager.pushMatrix();
 
-//		if (cachedMainBlockState != tileentity.getMainBlock()) {
-			IBlockState cachedMainBlockState = tileentity.getMainBlock();
+		//		if (cachedMainBlockState != tileentity.getMainBlock()) {
+		IBlockState cachedMainBlockState = tileentity.getMainBlock();
 
-			String mainMaterialString = dispatcher.getModelForState(cachedMainBlockState).getQuads(cachedMainBlockState, EnumFacing.NORTH, 0).get(0).getSprite().getIconName();
-			StringTokenizer stringTokenizerMainMaterial = new StringTokenizer(mainMaterialString, ":");
-			if (stringTokenizerMainMaterial.countTokens() == 2) {
-				String namespace = stringTokenizerMainMaterial.nextToken();
-				String path = namespace + ":textures/" + stringTokenizerMainMaterial.nextToken() + ".png";
-				ResourceLocation MainTexture = new ResourceLocation(path);
-				this.bindTexture(MainTexture);
-				this.getModel().renderCase(SCALE);
-				GlStateManager.popMatrix();
-				GlStateManager.pushMatrix();
-			}
-//		}
+		String mainMaterialString = dispatcher.getModelForState(cachedMainBlockState).getQuads(cachedMainBlockState, EnumFacing.NORTH, 0).get(0).getSprite().getIconName();
+		StringTokenizer stringTokenizerMainMaterial = new StringTokenizer(mainMaterialString, ":");
+		if (stringTokenizerMainMaterial.countTokens() == 2) {
+			String namespace = stringTokenizerMainMaterial.nextToken();
+			String path = namespace + ":textures/" + stringTokenizerMainMaterial.nextToken() + ".png";
+			ResourceLocation MainTexture = new ResourceLocation(path);
+			this.bindTexture(MainTexture);
+			this.getModel().renderCase(SCALE);
+			GlStateManager.popMatrix();
+			GlStateManager.pushMatrix();
+		}
+		//		}
 
 		IBlockState cachedCarpetBlockState = tileentity.getCarpetBlock();
 		String carpetString = dispatcher.getModelForState(cachedCarpetBlockState).getQuads(cachedCarpetBlockState, EnumFacing.NORTH, 0).get(0).getSprite().getIconName();
@@ -101,31 +109,52 @@ public class RenderDisplayCase extends TileEntitySpecialRenderer<TileEntityDispl
 			this.getModel().renderCarpet(SCALE);
 			GlStateManager.disableBlend(); // disable transparency
 		}
-//		if (cachedGlassBlockState != tileentity.getGlassBlock()) {
-			IBlockState cachedGlassBlockState = tileentity.getGlassBlock();
+		//		if (cachedGlassBlockState != tileentity.getGlassBlock()) {
+		IBlockState cachedGlassBlockState = tileentity.getGlassBlock();
 
-			String glassString = dispatcher.getModelForState(cachedGlassBlockState).getQuads(cachedGlassBlockState, EnumFacing.NORTH, 0).get(0).getSprite().getIconName();
-			StringTokenizer stringTokenizerGlass = new StringTokenizer(glassString, ":");
-			if (stringTokenizerGlass.countTokens() == 2) {
-				String namespace = stringTokenizerGlass.nextToken();
-				String path = namespace + ":textures/" + stringTokenizerGlass.nextToken() + ".png";
-				ResourceLocation GlassTexture = new ResourceLocation(path);
+		String glassString = dispatcher.getModelForState(cachedGlassBlockState).getQuads(cachedGlassBlockState, EnumFacing.NORTH, 0).get(0).getSprite().getIconName();
+		StringTokenizer stringTokenizerGlass = new StringTokenizer(glassString, ":");
+		if (stringTokenizerGlass.countTokens() == 2) {
+			String namespace = stringTokenizerGlass.nextToken();
+			String path = namespace + ":textures/" + stringTokenizerGlass.nextToken() + ".png";
+			ResourceLocation GlassTexture = new ResourceLocation(path);
 			this.bindTexture(GlassTexture);
-				GlStateManager.enableDepth();
-				GlStateManager.depthFunc(515);
-				GlStateManager.depthMask(true);
+			GlStateManager.enableDepth();
+			GlStateManager.depthFunc(515);
+			GlStateManager.depthMask(true);
 			GlStateManager.enableBlend(); // enable glass transparency
 			this.getModel().renderGlass(SCALE);
 			GlStateManager.disableBlend(); // disable transparency
+		}
+
+		GlStateManager.popMatrix();
+		GlStateManager.popMatrix();
+
+		renderContainedItemNameplate(tileentity, hasItem, x, y, z);
+	}
+
+	private void renderContainedItemNameplate(TileEntityDisplayCase tileentity, boolean hasItem, double x, double y, double z) {
+		if (BetterDisplays.settings.displayItemNames && hasItem) {
+
+			// no display if the player should sneak
+			if (BetterDisplays.settings.displayItemNamesOnlyWhileSneaking && !Minecraft.getMinecraft().player.isSneaking()) {
+				return;
 			}
 
-//		}
-
-
-		//		GlStateManager.enableLighting();
-		GlStateManager.popMatrix();
-
-		GlStateManager.popMatrix();
+			String displayString = tileentity.getStack().getDisplayName();
+			if (ClientEventHandler.lastBlockPosResult != null && ClientEventHandler.lastBlockPosResult.equals(tileentity.getPos())) {
+				if (tileentity.getStack().getItem() == Items.ENCHANTED_BOOK) {
+					float yOffset = 0.0f;
+					drawNameplate(tileentity, displayString, x, y + 0.2f, z, 4);
+					for (Map.Entry<Enchantment, Integer> enchantment : EnchantmentHelper.getEnchantments(tileentity.getStack()).entrySet()) {
+						yOffset += -0.3f;
+						drawNameplate(tileentity, enchantment.getKey().getTranslatedName(enchantment.getValue()), x, y + 0.2f + yOffset, z, 4);
+					}
+				} else {
+					drawNameplate(tileentity, displayString, x, y, z, 4);
+				}
+			}
+		}
 	}
 
 	private void renderItem(TileEntityDisplayCase tileentity, float t) {

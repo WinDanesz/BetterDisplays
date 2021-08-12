@@ -150,13 +150,13 @@ public class BlockDisplayCase extends Block implements ITileEntityProvider {
 				InventoryHelper.spawnItemStack(worldIn, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), stack);
 			}
 
-			if (displayCase.getMainBlock() != null) {
+			if (displayCase.getMainBlock() != null && displayCase.getMainBlock() != Blocks.PLANKS.getDefaultState()) {
 				IBlockState blockState = displayCase.getMainBlock();
 				ItemStack itemStack = new ItemStack(Item.getItemFromBlock(blockState.getBlock()), 1, blockState.getBlock().getMetaFromState(blockState));
 				InventoryHelper.spawnItemStack(worldIn, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), itemStack);
 			}
 
-			if (displayCase.getGlassBlock() != null) {
+			if (displayCase.getGlassBlock() != null && displayCase.getGlassBlock() != Blocks.GLASS.getDefaultState()) {
 				IBlockState blockState = displayCase.getGlassBlock();
 				ItemStack itemStack = new ItemStack(Item.getItemFromBlock(blockState.getBlock()), 1, blockState.getBlock().getMetaFromState(blockState));
 				InventoryHelper.spawnItemStack(worldIn, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), itemStack);

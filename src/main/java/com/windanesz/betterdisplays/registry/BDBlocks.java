@@ -37,7 +37,12 @@ public class BDBlocks {
 	public static final Block display_case_small = placeholder();
 	public static final Block display_case_small_framed = placeholder();
 
-	public static final Block book_holder = placeholder();
+	public static final Block book_holder_oak = placeholder();
+	public static final Block book_holder_spruce = placeholder();
+	public static final Block book_holder_birch = placeholder();
+	public static final Block book_holder_acacia = placeholder();
+	public static final Block book_holder_jungle = placeholder();
+	public static final Block book_holder_dark_oak = placeholder();
 
 	@SubscribeEvent
 	public static void register(RegistryEvent.Register<Block> event) {
@@ -50,7 +55,12 @@ public class BDBlocks {
 		registerBlock(registry, "display_case_small", new BlockDisplayCaseSmall("display_case_small"));
 		registerBlock(registry, "display_case_small_framed", new BlockDisplayCaseSmallFramed( "display_case_small_framed"));
 
-		registerBlock(registry, "book_holder", new BlockBookHolder());
+		registerBlock(registry, "book_holder_oak", new BlockBookHolder());
+		registerBlock(registry, "book_holder_spruce", new BlockBookHolder());
+		registerBlock(registry, "book_holder_birch", new BlockBookHolder());
+		registerBlock(registry, "book_holder_acacia", new BlockBookHolder());
+		registerBlock(registry, "book_holder_jungle", new BlockBookHolder());
+		registerBlock(registry, "book_holder_dark_oak", new BlockBookHolder());
 
 	}
 

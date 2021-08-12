@@ -1,5 +1,6 @@
 package com.windanesz.betterdisplays.block;
 
+import com.windanesz.betterdisplays.BetterDisplays;
 import com.windanesz.betterdisplays.registry.BDTab;
 import com.windanesz.betterdisplays.tileentity.TileEntityBookHolder;
 import net.minecraft.block.Block;
@@ -25,7 +26,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -36,54 +39,48 @@ public class BlockBookHolder extends Block implements ITileEntityProvider {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool HAS_BOOK = PropertyBool.create("has_book");
 
+	protected static final AxisAlignedBB AABB_BOTTOM_HALF = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
+
 	public BlockBookHolder() {
 		super(Material.WOOD);
 		setCreativeTab(BDTab.BETTER_DISPLAYS_TAB);
-		setSoundType(SoundType.GLASS);
+		setSoundType(SoundType.WOOD);
 		setHardness(2.0F);
 		setResistance(5.0F);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(HAS_BOOK, Boolean.valueOf(false)));
 
 	}
 
-	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-	{
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
 		return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(HAS_BOOK, Boolean.valueOf(false));
 	}
 
-	public IBlockState getStateFromMeta(int meta)
-	{
+	public IBlockState getStateFromMeta(int meta) {
 		return this.getDefaultState().withProperty(HAS_BOOK, Boolean.valueOf((meta & 4) != 0)).withProperty(FACING, EnumFacing.byHorizontalIndex(meta & 3));
 	}
 
-	public int getMetaFromState(IBlockState state)
-	{
+	public int getMetaFromState(IBlockState state) {
 		int i = 0;
-		i = i | ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
+		i = i | ((EnumFacing) state.getValue(FACING)).getHorizontalIndex();
 
-		if (((Boolean)state.getValue(HAS_BOOK)).booleanValue())
-		{
+		if (((Boolean) state.getValue(HAS_BOOK)).booleanValue()) {
 			i |= 4;
 		}
 
 		return i;
 	}
 
-	public IBlockState withRotation(IBlockState state, Rotation rot)
-	{
-		return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
+	public IBlockState withRotation(IBlockState state, Rotation rot) {
+		return state.withProperty(FACING, rot.rotate((EnumFacing) state.getValue(FACING)));
 	}
 
-	public IBlockState withMirror(IBlockState state, Mirror mirrorIn)
-	{
-		return state.withRotation(mirrorIn.toRotation((EnumFacing)state.getValue(FACING)));
+	public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
+		return state.withRotation(mirrorIn.toRotation((EnumFacing) state.getValue(FACING)));
 	}
 
-	protected BlockStateContainer createBlockState()
-	{
+	protected BlockStateContainer createBlockState() {
 		return new BlockStateContainer(this, new IProperty[] {FACING, HAS_BOOK});
 	}
-
 
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getRenderLayer() {
@@ -114,39 +111,53 @@ public class BlockBookHolder extends Block implements ITileEntityProvider {
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState block, EntityPlayer player, EnumHand hand,
 			EnumFacing side, float hitX, float hitY, float hitZ) {
 
-		ItemStack toInsert = player.getHeldItem(hand);
+		if (hand == EnumHand.MAIN_HAND) {
+			ItemStack toInsert = player.getHeldItem(hand);
 
-		TileEntity tileEntity = world.getTileEntity(pos);
+			TileEntity tileEntity = world.getTileEntity(pos);
 
-		if (!(tileEntity instanceof TileEntityBookHolder)) {
-			return false;
-		}
-
-		TileEntityBookHolder tileEntityBookHolder = (TileEntityBookHolder) tileEntity;
-		ItemStack currentStack = tileEntityBookHolder.getBook();
-
-		if (currentStack.isEmpty()) {
-			ItemStack stack = toInsert.copy();
-			stack.setCount(1);
-			((TileEntityBookHolder) tileEntity).setBook(stack);
-			world.playSound(null, pos, SoundEvents.ENTITY_ITEMFRAME_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-			world.setBlockState(pos, block.withProperty(HAS_BOOK, Boolean.valueOf(true)), 2);
-			if (!player.isCreative()) { toInsert.shrink(1); }
-		} else {
-			if (toInsert.isEmpty()) {
-				player.setHeldItem(hand, currentStack);
-			} else if (!player.addItemStackToInventory(currentStack)) {
-				world.playSound(null, pos, SoundEvents.ENTITY_ITEMFRAME_REMOVE_ITEM, SoundCategory.BLOCKS, 1.0F, 1.0F);
-				player.dropItem(currentStack, false);
+			if (!(tileEntity instanceof TileEntityBookHolder)) {
+				return true;
 			}
 
-			world.setBlockState(pos, block.withProperty(HAS_BOOK, Boolean.valueOf(false)), 2);
-			((TileEntityBookHolder) tileEntity).setBook(ItemStack.EMPTY);
+			TileEntityBookHolder tileEntityBookHolder = (TileEntityBookHolder) tileEntity;
+			ItemStack currentBook = tileEntityBookHolder.getBook();
+
+			if (currentBook.isEmpty()) {
+				if (!toInsert.isEmpty() && BetterDisplays.settings.isAllowedBookItem(toInsert)) {
+					if (!world.isRemote) {
+						ItemStack stack = toInsert.copy();
+						stack.setCount(1);
+						((TileEntityBookHolder) tileEntity).setBook(stack);
+						world.playSound(null, pos, SoundEvents.ENTITY_ITEMFRAME_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+						world.setBlockState(pos, block.withProperty(HAS_BOOK, Boolean.valueOf(true)), 2);
+						//						world.markBlockRangeForRenderUpdate(pos, pos);
+
+						if (!player.isCreative()) { toInsert.shrink(1); }
+						tileEntityBookHolder.sendUpdates();
+						//					return true;
+					}
+				}
+				return true;
+			} else {
+				if (!world.isRemote) {
+					if (!player.addItemStackToInventory(currentBook)) {
+						world.playSound(null, pos, SoundEvents.ENTITY_ITEMFRAME_REMOVE_ITEM, SoundCategory.BLOCKS, 1.0F, 1.0F);
+						player.dropItem(currentBook, false);
+					}
+					world.setBlockState(pos, block.withProperty(HAS_BOOK, Boolean.valueOf(false)), 2);
+					//					world.markBlockRangeForRenderUpdate(pos, pos);
+
+					((TileEntityBookHolder) tileEntity).setBook(ItemStack.EMPTY);
+					//tileEntityBookHolder.markDirty();
+					tileEntityBookHolder.sendUpdates();
+				}
+				return true;
+			}
 		}
+		//		return true;
 
-
-		tileEntityBookHolder.markDirty();
-		return true;
+		return false;
 	}
 
 	@Override
@@ -164,5 +175,22 @@ public class BlockBookHolder extends Block implements ITileEntityProvider {
 
 		super.breakBlock(worldIn, pos, state);
 	}
+
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		EnumFacing enumfacing = (EnumFacing) state.getValue(FACING);
+
+		switch (enumfacing) {
+			case EAST:
+				return new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.15D, 1.0D, 1.0D);
+			case WEST:
+				return new AxisAlignedBB(1.0D, 0.0D, 0.0D, 0.85D, 1.0D, 1.0D);
+			case SOUTH:
+				return new AxisAlignedBB(1.0D, 0.0D, 0.0D, 0.0D, 1.0D, 0.15D);
+			case NORTH:
+			default:
+				return new AxisAlignedBB(0.0D, 0.0D, 0.85D, 1.0D, 1.0D, 1D);
+		}
+	}
+
 }
 

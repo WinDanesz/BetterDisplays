@@ -59,9 +59,13 @@ public final class BDItems {
 		registerItemBlock(registry, BDBlocks.display_case_framed_no_top);
 		registerItemBlock(registry, BDBlocks.display_case_small);
 		registerItemBlock(registry, BDBlocks.display_case_small_framed);
-		registerItemBlock(registry, BDBlocks.book_holder);
-		// registerItem(registry, "ring_poison_arrow", new ItemASArtefact(EnumRarity.UNCOMMON, ItemArtefact.Type.RING));
 
+		registerItemBlock(registry, BDBlocks.book_holder_oak);
+		registerItemBlock(registry, BDBlocks.book_holder_spruce);
+		registerItemBlock(registry, BDBlocks.book_holder_birch);
+		registerItemBlock(registry, BDBlocks.book_holder_acacia);
+		registerItemBlock(registry, BDBlocks.book_holder_jungle);
+		registerItemBlock(registry, BDBlocks.book_holder_dark_oak);
 	}
 
 
