@@ -1,0 +1,4 @@
+
+# Better Displays &nbsp; [![Build Mod](https://github.com/WinDanesz/BetterDisplays/actions/workflows/gradle.yml/badge.svg)](https://github.com/WinDanesz/BetterDisplays/actions/workflows/gradle.yml) [![Curseforge](http://cf.way2muchnoise.eu/full_514829_downloads.svg)](https://www.curseforge.com/minecraft/mc-mods/better-displays) [![Curseforge](http://cf.way2muchnoise.eu/versions/514829.svg)](http://www.curseforge.com/minecraft/mc-mods/better-displays/files) [![Discord](https://img.shields.io/discord/544897694448091146?color=7289DA&label=Discord)](https://discord.gg/wuSsgKwAKv)
+
+Better Displays is a Minecraft 1.12.2 mod adding various decorative items to the game including modular display cases, book holders, and more upcoming items in the future.
