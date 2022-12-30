@@ -102,16 +102,19 @@ public class BlockDisplayCase extends Block implements ITileEntityProvider {
 				ItemStack.EMPTY != OreDictionary.getOres("plankWood").stream().filter(stack -> stack.getItem().getRegistryName().toString()
 						.equals(toInsert.getItem().getRegistryName().toString())).findFirst().orElse(ItemStack.EMPTY)) {
 			tileCase.setMainBlock(toInsert);
+//			if (!player.isCreative()) { toInsert.shrink(1); }
 			return true;
 		} else if (item1 == Item.getItemFromBlock(Blocks.CARPET)) {
 			tileCase.setCarpetBlock(toInsert);
+//			if (!player.isCreative()) { toInsert.shrink(1); }
 			return true;
 
 		} else {
 			if (ItemStack.EMPTY != OreDictionary.getOres("blockGlass").stream().filter(stack -> stack.getItem().getRegistryName().toString()
 					.equals(toInsert.getItem().getRegistryName().toString())).findFirst().orElse(ItemStack.EMPTY)) {
+//				giveStackToPlayer(player, new ItemStack(Item.getItemFromBlock(tileCase.getGlassBlock().getBlock()), 1, tileCase.getGlassBlock().getBlock().getMetaFromState(tileCase.getGlassBlock())));
 				tileCase.setGlassBlock(toInsert);
-
+//				if (!player.isCreative()) { toInsert.shrink(1); }
 				return true;
 			}
 		}
@@ -153,23 +156,57 @@ public class BlockDisplayCase extends Block implements ITileEntityProvider {
 			if (displayCase.getMainBlock() != null && displayCase.getMainBlock() != Blocks.PLANKS.getDefaultState()) {
 				IBlockState blockState = displayCase.getMainBlock();
 				ItemStack itemStack = new ItemStack(Item.getItemFromBlock(blockState.getBlock()), 1, blockState.getBlock().getMetaFromState(blockState));
-				InventoryHelper.spawnItemStack(worldIn, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), itemStack);
+//				InventoryHelper.spawnItemStack(worldIn, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), itemStack);
 			}
 
 			if (displayCase.getGlassBlock() != null && displayCase.getGlassBlock() != Blocks.GLASS.getDefaultState()) {
 				IBlockState blockState = displayCase.getGlassBlock();
 				ItemStack itemStack = new ItemStack(Item.getItemFromBlock(blockState.getBlock()), 1, blockState.getBlock().getMetaFromState(blockState));
-				InventoryHelper.spawnItemStack(worldIn, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), itemStack);
+//				InventoryHelper.spawnItemStack(worldIn, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), itemStack);
 			}
 
 			if (displayCase.getCarpetBlock() != null) {
 				IBlockState blockState = displayCase.getCarpetBlock();
 				ItemStack itemStack = new ItemStack(Item.getItemFromBlock(blockState.getBlock()), 1, blockState.getBlock().getMetaFromState(blockState));
-				InventoryHelper.spawnItemStack(worldIn, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), itemStack);
+//				InventoryHelper.spawnItemStack(worldIn, tileEntity.getPos().getX(), tileEntity.getPos().getY(), tileEntity.getPos().getZ(), itemStack);
 			}
 		}
 
 		super.breakBlock(worldIn, pos, state);
 	}
+
+	/**
+	 * Static method to give an itemstack to a player. Handles side checks and null checks, prioritizes the hands.
+	 *
+	 * @param player the player who receives the item
+	 * @param stack  the stack to give
+	 * @return false if failed to give, true if successfully gave the item
+	 */
+	public static boolean giveStackToPlayer(EntityPlayer player, ItemStack stack) {
+		if (player != null && stack != null && !stack.isEmpty()) {
+
+			if (!player.world.isRemote) {
+
+				if (player.getHeldItemMainhand().isEmpty()) {
+					// main hand
+					player.setHeldItem(EnumHand.MAIN_HAND, stack);
+				} else if (player.getHeldItemOffhand().isEmpty()) {
+					// offhand
+					player.setHeldItem(EnumHand.OFF_HAND, stack);
+				} else {
+					// any slot
+					if (!player.inventory.addItemStackToInventory(stack)) {
+						// or just drop the item..
+						player.dropItem(stack, false);
+					}
+				}
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 }
 
