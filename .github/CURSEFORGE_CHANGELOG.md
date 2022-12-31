@@ -1,9 +1,13 @@
-<h2>Version v1.1.0 - 12/30/2022</h2>
+<h2>Version v1.1.1 - 12/31/2022</h2>
 <p>&nbsp;</p>
 <h3>What's Changed</h3>
 <p><span style="font-size: 1.2rem;">&nbsp;</span></p>
 <h4><strong>Bug Fixes</strong></h4>
-<p>- Fixed display case material dupe bug</p>
+<p>- Fixed Spruce Book Holder appearing empty even when it has books</p>
+<p>- Fixed the book holders' positioning, making them attached to walls instead of floating</p>
+
+<h4><strong>Features</strong></h4>
+<p>- Added crafting recipes for the book holders</p>
 <p>&nbsp;</p>
 <p>As always, the easiest way to get help or feedback is through the Discord server! Find the link on the CurseForge page.</p>
 <p>&nbsp;</p>
