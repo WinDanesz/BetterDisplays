@@ -1,0 +1,25 @@
+{
+    "type": "minecraft:crafting_shaped",
+    "group": "wooden_slab",
+    "pattern": [
+        "NSN",
+        "SCS",
+        "NSN"
+    ],
+    "key": {
+        "S": {
+            "item": "minecraft:wooden_slab",
+            "data": 1
+        },
+        "C": {
+            "item": "minecraft:carpet",
+            "data": 14
+        },
+        "N": {
+            "item": "minecraft:gold_nugget"
+        }
+    },
+    "result": {
+        "item": "betterdisplays:book_holder_spruce"
+    }
+}
