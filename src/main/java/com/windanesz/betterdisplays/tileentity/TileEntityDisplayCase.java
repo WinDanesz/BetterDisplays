@@ -9,6 +9,8 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
@@ -29,7 +31,10 @@ public class TileEntityDisplayCase extends TileEntity {
 		rotationZ = 0;
 	}
 
-	public void setStack(ItemStack stack) { this.stack = stack; }
+	public void setStack(ItemStack stack) {
+		this.stack = stack;
+		sendUpdates();
+	}
 
 	public ItemStack getStack() { return stack; }
 
@@ -48,22 +53,19 @@ public class TileEntityDisplayCase extends TileEntity {
 	public void setMainBlock(ItemStack itemStack) {
 		Block block = Block.getBlockFromItem(itemStack.getItem());
 		mainBlock = block.getStateFromMeta(itemStack.getMetadata());
-		world.notifyNeighborsRespectDebug(pos, this.blockType, true);
-		markDirty();
+		sendUpdates();
 	}
 
 	public void setGlassBlock(ItemStack itemStack) {
 		Block block = Block.getBlockFromItem(itemStack.getItem());
 		glassBlock = block.getStateFromMeta(itemStack.getMetadata());
-		world.notifyNeighborsRespectDebug(pos, this.blockType, true);
-		markDirty();
+		sendUpdates();
 	}
 
 	public void setCarpetBlock(ItemStack itemStack) {
 		Block block = Block.getBlockFromItem(itemStack.getItem());
 		carpetBlock = block.getStateFromMeta(itemStack.getMetadata());
-		world.notifyNeighborsRespectDebug(pos, this.blockType, true);
-		markDirty();
+		sendUpdates();
 	}
 
 	public IBlockState getMainBlock() {
@@ -86,6 +88,18 @@ public class TileEntityDisplayCase extends TileEntity {
 			case SOUTH:
 				incrementXRotation();
 		}
+		sendUpdates();
+	}
+
+	public void sendUpdates() {
+		if (world == null) {
+			return;
+		}
+
+		world.markBlockRangeForRenderUpdate(pos, pos);
+		world.notifyBlockUpdate(pos, getState(), getState(), 3);
+		world.scheduleBlockUpdate(pos, this.getBlockType(), 0, 0);
+		markDirty();
 	}
 
 	// Tile Data Handling
@@ -154,6 +168,16 @@ public class TileEntityDisplayCase extends TileEntity {
 
 	@Override
 	public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-		readFromNBT(pkt.getNbtCompound());
+		super.onDataPacket(net, pkt);
+		handleUpdateTag(pkt.getNbtCompound());
+	}
+
+	private IBlockState getState() {
+		return world.getBlockState(pos);
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+		return oldState.getBlock() != newState.getBlock();
 	}
 }

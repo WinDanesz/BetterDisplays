@@ -71,6 +71,7 @@ public class RenderDisplayCase extends TileEntitySpecialRenderer<TileEntityDispl
 		this.renderItem(tileentity, 1);
 
 		GlStateManager.popMatrix();
+		resetRenderStateAfterItem();
 		GlStateManager.translate(+0.5f, -1F, -0.5f);
 
 		BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
@@ -102,12 +103,9 @@ public class RenderDisplayCase extends TileEntitySpecialRenderer<TileEntityDispl
 			String path = namespace + ":textures/" + stringTokenizerCarpet.nextToken() + ".png";
 			ResourceLocation carpetTexture = new ResourceLocation(path);
 			this.bindTexture(carpetTexture);
-			GlStateManager.enableDepth();
-			GlStateManager.depthFunc(515);
-			GlStateManager.depthMask(true);
-			GlStateManager.enableBlend(); // enable glass transparency
+			prepareTransparentLayer();
 			this.getModel().renderCarpet(SCALE);
-			GlStateManager.disableBlend(); // disable transparency
+			restoreTransparentLayer();
 		}
 		//		if (cachedGlassBlockState != tileentity.getGlassBlock()) {
 		IBlockState cachedGlassBlockState = tileentity.getGlassBlock();
@@ -119,12 +117,9 @@ public class RenderDisplayCase extends TileEntitySpecialRenderer<TileEntityDispl
 			String path = namespace + ":textures/" + stringTokenizerGlass.nextToken() + ".png";
 			ResourceLocation GlassTexture = new ResourceLocation(path);
 			this.bindTexture(GlassTexture);
-			GlStateManager.enableDepth();
-			GlStateManager.depthFunc(515);
-			GlStateManager.depthMask(true);
-			GlStateManager.enableBlend(); // enable glass transparency
+			prepareTransparentLayer();
 			this.getModel().renderGlass(SCALE);
-			GlStateManager.disableBlend(); // disable transparency
+			restoreTransparentLayer();
 		}
 
 		GlStateManager.popMatrix();
@@ -177,6 +172,33 @@ public class RenderDisplayCase extends TileEntitySpecialRenderer<TileEntityDispl
 
 	public float getItemYOffset() {
 		return -0.02f;
+	}
+
+	private void resetRenderStateAfterItem() {
+		GlStateManager.matrixMode(5890);
+		GlStateManager.loadIdentity();
+		GlStateManager.matrixMode(5888);
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.disableBlend();
+		GlStateManager.enableAlpha();
+		GlStateManager.enableLighting();
+	}
+
+	private void prepareTransparentLayer() {
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.enableDepth();
+		GlStateManager.depthFunc(515);
+		GlStateManager.depthMask(true);
+		GlStateManager.enableBlend();
+		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA,
+				GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA,
+				GlStateManager.SourceFactor.ONE,
+				GlStateManager.DestFactor.ZERO);
+	}
+
+	private void restoreTransparentLayer() {
+		GlStateManager.disableBlend();
+		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 
 }

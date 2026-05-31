@@ -15,12 +15,14 @@ import org.apache.logging.log4j.Logger;
 import java.io.File;
 import java.util.Random;
 
-@Mod(modid = BetterDisplays.MODID, name = BetterDisplays.NAME, version = "@VERSION@", acceptedMinecraftVersions = "[@MCVERSION@]", guiFactory = "com.windanesz.betterdisplays.BetterDisplaysGuiFactory"
+@Mod(modid = BetterDisplays.MODID, name = BetterDisplays.NAME, version = BetterDisplays.VERSION, acceptedMinecraftVersions = BetterDisplays.ACCEPTED_MINECRAFT_VERSIONS, guiFactory = "com.windanesz.betterdisplays.BetterDisplaysGuiFactory"
 )
 public class BetterDisplays {
 
 	public static final String MODID = "betterdisplays";
 	public static final String NAME = "Better Displays";
+	public static final String VERSION = "GRADLE:VERSION" + "GRADLE:BUILD";
+	public static final String ACCEPTED_MINECRAFT_VERSIONS = "1.12.2";
 
 	public static final Random rand = new Random();
 

@@ -177,20 +177,15 @@ public class BlockBookHolder extends Block implements ITileEntityProvider {
 	}
 
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-		EnumFacing enumfacing = (EnumFacing) state.getValue(FACING);
-
-		switch (enumfacing) {
-			case EAST:
-				return new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.15D, 1.0D, 1.0D);
-			case WEST:
-				return new AxisAlignedBB(1.0D, 0.0D, 0.0D, 0.85D, 1.0D, 1.0D);
-			case SOUTH:
-				return new AxisAlignedBB(1.0D, 0.0D, 0.0D, 0.0D, 1.0D, 0.15D);
-			case NORTH:
-			default:
-				return new AxisAlignedBB(0.0D, 0.0D, 0.85D, 1.0D, 1.0D, 1D);
+		EnumFacing facing = state.getValue(FACING);
+		if (facing == EnumFacing.EAST) {
+			return new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.15D, 1.0D, 1.0D);
+		} else if (facing == EnumFacing.WEST) {
+			return new AxisAlignedBB(1.0D, 0.0D, 0.0D, 0.85D, 1.0D, 1.0D);
+		} else if (facing == EnumFacing.SOUTH) {
+			return new AxisAlignedBB(1.0D, 0.0D, 0.0D, 0.0D, 1.0D, 0.15D);
 		}
+		return new AxisAlignedBB(0.0D, 0.0D, 0.85D, 1.0D, 1.0D, 1D);
 	}
 
 }
-

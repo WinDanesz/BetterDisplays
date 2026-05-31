@@ -2,6 +2,8 @@ package com.windanesz.betterdisplays.block;
 
 import com.windanesz.betterdisplays.registry.BDTab;
 import com.windanesz.betterdisplays.tileentity.TileEntityDisplayCase;
+import com.windanesz.betterdisplays.tileentity.TileEntityDisplayCaseFramed;
+import com.windanesz.betterdisplays.tileentity.TileEntityDisplayCaseFramedNoTop;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.SoundType;
@@ -12,6 +14,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -52,7 +55,17 @@ public class BlockDisplayCase extends Block implements ITileEntityProvider {
 	@Nullable
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
-		return TileFactory.getTile(tile);
+		if (tile == null) {
+			return null;
+		}
+
+		if (tile.equalsIgnoreCase("display_case_framed")) {
+			return new TileEntityDisplayCaseFramed();
+		} else if (tile.equalsIgnoreCase("display_case_framed_no_top")) {
+			return new TileEntityDisplayCaseFramedNoTop();
+		}
+
+		return new TileEntityDisplayCase();
 	}
 
 	@Override
@@ -77,6 +90,10 @@ public class BlockDisplayCase extends Block implements ITileEntityProvider {
 			return false;
 		}
 
+		if (world.isRemote) {
+			return true;
+		}
+
 		TileEntityDisplayCase tileCase = (TileEntityDisplayCase) tileEntity;
 		ItemStack currentStack = tileCase.getStack();
 
@@ -91,32 +108,15 @@ public class BlockDisplayCase extends Block implements ITileEntityProvider {
 
 		Item item1 = toInsert.getItem();
 
-		if (Item.getItemFromBlock(Blocks.GOLD_BLOCK) == item1 ||
-				Item.getItemFromBlock(Blocks.IRON_BLOCK) == item1 ||
-				Item.getItemFromBlock(Blocks.LAPIS_BLOCK) == item1 ||
-				Item.getItemFromBlock(Blocks.DIAMOND_BLOCK) == item1 ||
-				Item.getItemFromBlock(Blocks.REDSTONE_BLOCK) == item1 ||
-				Item.getItemFromBlock(Blocks.EMERALD_BLOCK) == item1 ||
-				Item.getItemFromBlock(Blocks.QUARTZ_BLOCK) == item1 ||
-				Item.getItemFromBlock(Blocks.COAL_BLOCK) == item1 ||
-				ItemStack.EMPTY != OreDictionary.getOres("plankWood").stream().filter(stack -> stack.getItem().getRegistryName().toString()
-						.equals(toInsert.getItem().getRegistryName().toString())).findFirst().orElse(ItemStack.EMPTY)) {
-			tileCase.setMainBlock(toInsert);
-//			if (!player.isCreative()) { toInsert.shrink(1); }
-			return true;
-		} else if (item1 == Item.getItemFromBlock(Blocks.CARPET)) {
+		if (item1 == Item.getItemFromBlock(Blocks.CARPET)) {
 			tileCase.setCarpetBlock(toInsert);
-//			if (!player.isCreative()) { toInsert.shrink(1); }
 			return true;
-
-		} else {
-			if (ItemStack.EMPTY != OreDictionary.getOres("blockGlass").stream().filter(stack -> stack.getItem().getRegistryName().toString()
-					.equals(toInsert.getItem().getRegistryName().toString())).findFirst().orElse(ItemStack.EMPTY)) {
-//				giveStackToPlayer(player, new ItemStack(Item.getItemFromBlock(tileCase.getGlassBlock().getBlock()), 1, tileCase.getGlassBlock().getBlock().getMetaFromState(tileCase.getGlassBlock())));
-				tileCase.setGlassBlock(toInsert);
-//				if (!player.isCreative()) { toInsert.shrink(1); }
-				return true;
-			}
+		} else if (isGlassMaterial(toInsert)) {
+			tileCase.setGlassBlock(toInsert);
+			return true;
+		} else if (isValidMainMaterial(toInsert)) {
+			tileCase.setMainBlock(toInsert);
+			return true;
 		}
 
 		if (currentStack.isEmpty()) {
@@ -208,5 +208,19 @@ public class BlockDisplayCase extends Block implements ITileEntityProvider {
 		return false;
 	}
 
-}
+	private boolean isGlassMaterial(ItemStack stack) {
+		return ItemStack.EMPTY != OreDictionary.getOres("blockGlass").stream().filter(oreStack ->
+				oreStack.getItem().getRegistryName().toString().equals(stack.getItem().getRegistryName().toString())).findFirst().orElse(ItemStack.EMPTY);
+	}
 
+	private boolean isValidMainMaterial(ItemStack stack) {
+		if (!(stack.getItem() instanceof ItemBlock)) {
+			return false;
+		}
+
+		Block block = ((ItemBlock) stack.getItem()).getBlock();
+		IBlockState state = block.getStateFromMeta(stack.getMetadata());
+		return state.isFullBlock() && state.isFullCube();
+	}
+
+}
